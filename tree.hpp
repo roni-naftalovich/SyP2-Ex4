@@ -6,6 +6,9 @@
 #include <queue>
 #include <stack>
 #include <stdexcept>
+#include <sstream>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 
 template <typename T>
 class TreeNode {
@@ -25,6 +28,7 @@ private:
     int k;
 
     void deleteTree(TreeNode<T>* node);
+    void renderTree(SDL_Renderer* renderer, TTF_Font* font, TreeNode<T>* node, int x, int y, int offsetX, int offsetY) const;
 
 public:
     explicit Tree(int k = 2);
@@ -54,6 +58,9 @@ public:
     DFSIterator end_dfs_scan();
     HeapIterator begin_heap();
     HeapIterator end_heap();
+
+    template <typename U>
+    friend std::ostream& operator<<(std::ostream& os, const Tree<U>& tree);
 };
 
 #include "tree.tpp"
