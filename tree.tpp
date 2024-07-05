@@ -42,13 +42,14 @@ void Tree<T>::add_root(const T& key) {
 }
 
 template <typename T>
-void Tree<T>::add_sub_node(TreeNode<T>* parent, const T& key) {
-    if (parent->children.size() >= k) {
-        throw std::out_of_range("Number of children exceeds the allowed maximum");
+void Tree<T>::add_sub_node(TreeNode<T>* parent, const T& value) {
+    if (parent->children.size() >= static_cast<size_t>(k)) {
+        throw std::out_of_range("Number of children exceeds k");
     }
-    TreeNode<T>* child = new TreeNode<T>(key);
-    parent->addChild(child);
+    TreeNode<T>* new_node = new TreeNode<T>(value);
+    parent->children.push_back(new_node);
 }
+
 
 template <typename T>
 TreeNode<T>* Tree<T>::getRoot() {
@@ -122,7 +123,7 @@ void Tree<T>::renderTree(SDL_Renderer* renderer, TTF_Font* font, TreeNode<T>* no
     if (!node) return;
 
     // Draw the node rectangle
-    SDL_Rect rect = {x, y, 80, 50};  // Increase the width to 80
+    SDL_Rect rect = {x, y, 60, 50};  // Increase the width to 60
     SDL_SetRenderDrawColor(renderer, 0, 0, 255, 255);  // Blue color
     SDL_RenderFillRect(renderer, &rect);
 
@@ -144,22 +145,26 @@ void Tree<T>::renderTree(SDL_Renderer* renderer, TTF_Font* font, TreeNode<T>* no
     int textWidth = 0;
     int textHeight = 0;
     SDL_QueryTexture(textTexture, NULL, NULL, &textWidth, &textHeight);
-    SDL_Rect textRect = {x + (80 - textWidth) / 2, y + (50 - textHeight) / 2, textWidth, textHeight};  // Adjust the x coordinate
+    SDL_Rect textRect = {x + (60 - textWidth) / 2, y + (50 - textHeight) / 2, textWidth, textHeight};  // Adjust the x coordinate
     SDL_RenderCopy(renderer, textTexture, NULL, &textRect);
 
     SDL_FreeSurface(textSurface);
     SDL_DestroyTexture(textTexture);
 
+    // Adjust horizontal spacing for level 1
+    int adjustedOffsetX = (y == offsetY) ? offsetX * 2.4 : offsetX*0.92;  // Double the spacing for level 1
+
     // Draw the children
-    int childX = x - offsetX * (node->children.size() - 1) / 2;
+    int childX = x - adjustedOffsetX * (node->children.size() - 1) / 2;
     int childY = y + offsetY;
     for (TreeNode<T>* child : node->children) {
         SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);  // Red color for lines
-        SDL_RenderDrawLine(renderer, x + 40, y + 50, childX + 40, childY);  // Adjust the x coordinate
-        renderTree(renderer, font, child, childX, childY, offsetX / 2, offsetY);
-        childX += offsetX;
+        SDL_RenderDrawLine(renderer, x + 30, y + 50, childX + 30, childY);  // Adjust the x coordinate
+        renderTree(renderer, font, child, childX, childY, adjustedOffsetX / 2, offsetY * 0.9);
+        childX += adjustedOffsetX;
     }
 }
+
 
 template <typename T>
 std::ostream& operator<<(std::ostream& os, const Tree<T>& tree) {
@@ -191,7 +196,7 @@ std::ostream& operator<<(std::ostream& os, const Tree<T>& tree) {
         return os;
     }
 
-   TTF_Font* font = TTF_OpenFont("/usr/share/fonts/truetype/fonts-kalapi/Kalapi.ttf", 18);
+   TTF_Font* font = TTF_OpenFont("/usr/share/fonts/truetype/ubuntu/UbuntuMono-RI.ttf", 18);
     if (!font) {
         os << "Could not open font: " << TTF_GetError() << std::endl;
         SDL_DestroyRenderer(renderer);
@@ -213,7 +218,7 @@ std::ostream& operator<<(std::ostream& os, const Tree<T>& tree) {
         SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);  // White color for background
         SDL_RenderClear(renderer);
 
-        tree.renderTree(renderer, font, tree.root, 400, 50, 200, 100);
+        tree.renderTree(renderer, font, tree.root, 400, 50, 220, 180);
 
         SDL_RenderPresent(renderer);
     }

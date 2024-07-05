@@ -25,6 +25,29 @@ public:
     bool operator!=(const Complex& other) const {
         return !(*this == other);
     }
+
+
+    // Overload the > operator for comparison based on norm
+    bool operator>(const Complex& other) const {
+        if(real> other.real){
+            return true;
+        }
+        if(real == other.real && imag > other.imag){
+            return true;
+        }
+        return false;        
+    }
+
+    // Overload the < operator for comparison based on norm
+    bool operator<(const Complex& other) const {
+                if(real< other.real){
+            return true;
+        }
+        if(real == other.real && imag < other.imag){
+            return true;
+        }
+        return false;  
+    }
 };
 
 #endif // COMPLEX_HPP
