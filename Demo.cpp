@@ -1,3 +1,4 @@
+// Roni Naftalovich 319049060, roni100400100400@gmail.com
 #include "tree.hpp"
 
 int main() {
@@ -92,7 +93,7 @@ int main() {
     // Add children to the third child of the root node
     tree1.add_sub_node(n31, 10);
     tree1.add_sub_node(n31, 11);
-    tree1.add_sub_node(n31, 12);
+    //tree1.add_sub_node(n31, 12);
 
     // The tree should look like this:
     /**

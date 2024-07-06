@@ -1,3 +1,4 @@
+// Roni Naftalovich 319049060, roni100400100400@gmail.com
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
 #include "doctest.h"
 #include "tree_iterators.hpp"
@@ -16,6 +17,9 @@ TEST_CASE("Tree with double") {
     REQUIRE(tree.getRoot()->key == 1.1);
     REQUIRE(left->key == 2.2);
     REQUIRE(right->key == 3.3);
+
+    // Try to add more than 2 children to the root node (k=2)
+    CHECK_THROWS_AS(tree.add_sub_node(root, 4.4), std::out_of_range);
 
     std::vector<double> pre_order = {1.1, 2.2, 3.3};
     std::vector<double> post_order = {2.2, 3.3, 1.1};
@@ -155,6 +159,12 @@ TEST_CASE("Tree with complex") {
     REQUIRE(tree.getRoot()->key == Complex(1.1, 2.2));
     REQUIRE(left->key == Complex(3.3, 4.4));
     REQUIRE(right->key == Complex(5.5, 6.6));
+
+    // Check Complex operators
+    REQUIRE(Complex(1.1, 2.2) == Complex(1.1, 2.2));
+    REQUIRE(Complex(1.1, 2.2) != Complex(3.3, 4.4));
+    REQUIRE(Complex(1.1, 2.2) < Complex(3.3, 4.4));
+    REQUIRE(Complex(5.5, 6.6) > Complex(5.5, 4.4));
 
     std::vector<Complex> pre_order = {Complex(1.1, 2.2), Complex(3.3, 4.4), Complex(5.5, 6.6)};
     std::vector<Complex> post_order = {Complex(3.3, 4.4), Complex(5.5, 6.6), Complex(1.1, 2.2)};
